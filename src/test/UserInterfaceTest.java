@@ -1,7 +1,6 @@
 package test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 
@@ -21,7 +20,9 @@ public class UserInterfaceTest {
 		items.add("option 1");
 		items.add("option 2");
 		
-		ArrayList<String> menu = UserInterface.formatMenu(items);
+		UserInterface ui = new UserInterface();
+		
+		ArrayList<String> menu = ui.formatMenu(items);
 		String menuString = "";
 		for (String s : menu) {
 			menuString += s.toLowerCase();
