@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 
 import com.google.gson.Gson;
 
@@ -26,7 +27,7 @@ public class WeatherAPIInterface {
 	 * Makes an http request to the metaweather api
 	 * 
 	 * @param urlExt a String that forms the extension to the BASE_URL for use in
-	 *               making the api request
+	 *               making the api request. This should be a valid URL extension (i.e. URL encoded)
 	 * @return the response body text
 	 */
 	private static String makeHTTPRequest(String urlExt) {
@@ -62,7 +63,15 @@ public class WeatherAPIInterface {
 	public static HashMap<String, String> findLocations(String query) {
 		// Make API call
 		String urlExtension = "location/search/?query=";
-		String response = WeatherAPIInterface.makeHTTPRequest(urlExtension + query);
+		String url = urlExtension;
+		String response;
+		try {
+			// We need to encode the url query params only
+			url += URLEncoder.encode(query, java.nio.charset.StandardCharsets.UTF_8.toString());
+			response = WeatherAPIInterface.makeHTTPRequest(url);
+		} catch (Exception e) {
+			response = null;
+		}
 		
 		// Parse JSON from the response
 		Gson gson = new Gson();
