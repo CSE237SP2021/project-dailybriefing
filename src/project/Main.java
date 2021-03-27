@@ -27,8 +27,8 @@ public class Main {
 	public static void main(String[] args) {
 
 		UserInterface ui = new UserInterface();
-
-		// TODO build some actual logic into this
+		
+		// main program loop
 		while (true) {
 			MainMenuSelection selection = presentMainMenu(ui);
 			switch (selection) {
@@ -45,6 +45,8 @@ public class Main {
 				// TODO actually get the weather for the coordinate
 				continue;
 			default:
+				// handles the QUIT case
+				// terminates the program
 				return;
 			}
 		}
