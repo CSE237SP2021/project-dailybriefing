@@ -8,6 +8,8 @@ import java.util.HashMap;
 import org.junit.Test;
 
 import project.WeatherAPIInterface;
+import project.WeatherAPIInterface.Forecast;
+import project.WeatherAPIInterface.ForecastContainer;
 
 /**
  * Tests for the WeatherAPIInterface.java class
@@ -33,8 +35,16 @@ public class WeatherAPIInterfaceTest {
 	}
 	@Test
 	public void testCanGetForecast() {
-		HashMap<String,String> forecasts = WeatherAPIInterface.findForecasts("44418");
-		fail("not implemented");
+		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
+		assertTrue("Response is not null", forecasts != null);
+		assertTrue("Response for London", forecasts.title.equals("London"));
+		assertTrue("Response contains forecasts", forecasts.consolidated_weather.size() > 0);
+		for (Forecast f: forecasts.consolidated_weather) {
+			assertTrue("Each forecast has weather state", f.weather_state_name != null);
+			assertTrue("Each forecast has min temp", f.min_temp != null);
+			assertTrue("Each forecast has max temp", f.max_temp != null);
+			assertTrue("Each forecast has the temp", f.the_temp != null);
+		}
 	}
 	
 }
