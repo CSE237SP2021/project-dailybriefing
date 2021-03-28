@@ -1,6 +1,8 @@
 package test;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.HashMap;
 
 import org.junit.Test;
@@ -28,6 +30,11 @@ public class WeatherAPIInterfaceTest {
 	public void testDoesNotCrashOnInvalidLocation() {
 		HashMap<String, String> locs = WeatherAPIInterface.findLocations("asbibvondovn");
 		assertTrue("Response should contain no locations", locs.keySet().size() == 0);
+	}
+	@Test
+	public void testCanGetForecast() {
+		HashMap<String,String> forecasts = WeatherAPIInterface.findForecasts("44418");
+		fail("not implemented");
 	}
 	
 }

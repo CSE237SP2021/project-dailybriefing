@@ -43,6 +43,7 @@ public class Main {
 				System.out.println("You have selected " + options.get(locationSelection) + " which has a coordinate of "
 						+ locationQuery);
 				// TODO actually get the weather for the coordinate
+				
 				continue;
 			default:
 				// handles the QUIT case
