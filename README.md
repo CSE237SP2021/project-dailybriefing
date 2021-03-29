@@ -1,8 +1,12 @@
 # DailyBriefing
 
+## Building and Running the App
+
+Included is a script file, build-and-run.sh. Github will sometimes make this file non executable when you download it, so you have to either make it an executable yourself or execute it with the command `bash ./build-and-run.sh`. This will compile and run the program. 
+
 ## Project Overview
 
-DailyBriefing is a simple app for college students and young professionals to get a handle on their day. They can run the app and get the temperature for their location, or a forecast for the week. This will eventually be expanded to include default weather locations, other weather data like wind and weather conditions, closing suggestions, and even facts about this day in history.
+DailyBriefing is a simple app for college students and young professionals to get a handle on their day. They can run the app and get the temperature for their location, or a forecast for the week. This will eventually be expanded to include default weather locations, other weather data like wind and weather conditions, closing suggestions, and even facts about this day in history. Weather data taken from the api at https://www.metaweather.com/api/. 
 
 ## Project Plan
 
@@ -23,6 +27,10 @@ DailyBriefing is a simple app for college students and young professionals to ge
 
 - Visual presentation cleanup
 - This day in history data
+
+## Repository Structure
+
+When coding for this project, we followed a standard paradigm of feature branches off of a dev branch, which then gets merged into a production branch later. Bugs, objectives, and iteration goals are added to the Kanban board. One of the team members assigns themselves the issue and creates a branch off of master named appropriately with their name and whatever issue they are solving. They write code, then make a pull request to merge back into master. When we have a new release version of the app, we create a release branch off of master. Please check out this release branch if you are looking for the completed iteration 1 version of the app, as the master branch might have current work being done. Project code is found under src/projcect, and tests are found under src/test
 
 ## Fixing Build Path
 
