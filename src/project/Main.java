@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import project.WeatherAPIInterface.ForecastContainer;
-import project.WeatherAPIInterface.Forecast;
 public class Main {
 
 	private enum MainMenuSelection {
@@ -44,8 +43,8 @@ public class Main {
 				System.out.println("You have selected " + options.get(locationSelection) + " which has a woeid of "
 						+ locationQuery);
 				ForecastContainer currentForecast = WeatherAPIInterface.findForecasts(locationQuery);
-				ui.outputDateTime(currentForecast);
-				ui.outputForecast(currentForecast, true);
+				String forecastOption = ui.getUserInputForPrompt("What would you like?\n1. Today's weather\n2. A weather forecast for today and future days");
+				ui.outputForecast(currentForecast, forecastOption);
 				continue;
 			default:
 				// handles the QUIT case
