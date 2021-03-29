@@ -49,10 +49,9 @@ public class Main {
 				int weatherSelection = ui.getMenuSelection(options, true);
 				switch (weatherSelection) {
 				case 0:
-					System.out.println("outputcurrentweather");
 					ui.outputCurrentWeather(currentForecast);
+					break;
 				default:
-					System.out.println("outputforecast");
 					ui.outputForecast(currentForecast);
 				}
 				continue;
