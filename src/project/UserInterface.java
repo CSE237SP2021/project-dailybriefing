@@ -69,11 +69,18 @@ public class UserInterface {
 	 * Presents a formatted menu to the user and gets a valid selection
 	 * 
 	 * @param menuItems the list of options to present to the user
+	 * @param format whether or not to format the items into a numbered list
 	 * @return an index into the menuItems array indicating the selected option.
 	 *         This index is guaranteed to be valid.
 	 */
-	public int getMenuSelection(ArrayList<String> options) {
-		ArrayList<String> menuItems = this.formatMenu(options);
+	public int getMenuSelection(ArrayList<String> options, boolean format) {
+		ArrayList<String> menuItems;
+		if (format) {
+			menuItems = this.formatMenu(options);
+		}
+		else {
+			menuItems = options;
+		}
 
 		// present the menu
 		for (String item : menuItems) {
@@ -94,9 +101,9 @@ public class UserInterface {
 
 		// ensure index is valid
 		if (response < 0 || response > menuItems.size() - 1) {
-			System.out.println("Sorry, the option you selected is invalid. Please select an option between 1" + "and "
+			System.out.println("Sorry, the option you selected is invalid. Please select an option between 1" + " and "
 					+ menuItems.size());
-			return getMenuSelection(menuItems);
+			return getMenuSelection(menuItems, false);
 		}
 		return response;
 	}
@@ -111,19 +118,16 @@ public class UserInterface {
 	public void outputForecast(ForecastContainer container) {
 		String datetime = container.time;
 		String date = datetime.substring(0, datetime.indexOf("T"));
-
 		System.out.println("Briefing for " + container.title + ":");
 		for (Forecast f : container.consolidated_weather) {
 			date = f.applicable_date;
 			System.out.println("\tDate: " + date);
-			System.out.println("\tTemp: " + f.the_temp + "\u00B0" + "C");
+			System.out.println("\tTemp: " + formatTemp(f.the_temp));
 		}
-
 	}
 
 	/**
-	 * Prints the temperature information for the selected city for a certain number
-	 * of days
+	 * Prints the temperature information for the selected city for today
 	 * 
 	 * @author steve
 	 * @param container - forecast container containing weather/city information
@@ -136,7 +140,7 @@ public class UserInterface {
 		for (Forecast f : container.consolidated_weather) {
 			if (f.applicable_date.equals(date)) {
 				this.outputDateTime(container);
-				System.out.println("\tTemp: " + f.the_temp + "\u00B0" + "C");
+				System.out.println("\tTemp: " + formatTemp(f.the_temp));
 				notFound = false;
 				break;
 			}
@@ -162,6 +166,18 @@ public class UserInterface {
 		System.out.println("Briefing for " + container.title + ":");
 		System.out.println("\tDate: " + date);
 		System.out.println("\tTime: " + time);
+	}
+	
+	private String formatTemp(String temp) {
+		String ret;
+		if(temp.length() > 5) {
+			ret = temp.substring(0, 5);
+		}
+		else {
+			ret = temp;
+		}
+		ret+="\u00B0" + "C";
+		return ret;
 	}
 
 }

@@ -15,7 +15,7 @@ public class Main {
 		ArrayList<String> options = new ArrayList<>();
 		options.add("Get weather for a specified location");
 		options.add("Quit");
-		int selection = ui.getMenuSelection(options);
+		int selection = ui.getMenuSelection(options, true);
 		switch (selection) {
 		case 0:
 			return MainMenuSelection.GetWeatherForLocation;
@@ -38,19 +38,19 @@ public class Main {
 				ArrayList<String> options = new ArrayList<>(locs.keySet());
 				Collections.sort(options);
 				ui.present("We were able to find the following locations, please select the correct one:");
-				int locationSelection = ui.getMenuSelection(options);
+				int locationSelection = ui.getMenuSelection(options, true);
 				String locationQuery = locs.get(options.get(locationSelection));
 				ui.present("You have selected " + options.get(locationSelection));
 				ForecastContainer currentForecast = WeatherAPIInterface.findForecasts(locationQuery);
-				
 				options = new ArrayList<>();
 				options.add("Today's weather");
 				options.add("A weather forecast for today and future days");
 				ui.present("What would you like?");
-				int weatherSelection = ui.getMenuSelection(options);
+				int weatherSelection = ui.getMenuSelection(options, true);
 				switch (weatherSelection) {
 				case 0:
 					ui.outputCurrentWeather(currentForecast);
+					break;
 				default:
 					ui.outputForecast(currentForecast);
 				}
