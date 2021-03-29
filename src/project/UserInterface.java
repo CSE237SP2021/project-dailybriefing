@@ -13,7 +13,7 @@ import project.WeatherAPIInterface.ForecastContainer;
  *
  */
 public class UserInterface {
-	
+
 	Scanner scanner = new Scanner(System.in);
 
 	public UserInterface() {
@@ -28,7 +28,7 @@ public class UserInterface {
 	public void present(String message) {
 		System.out.println(message);
 	}
-	
+
 	/**
 	 * Presents the app's welcome message
 	 */
@@ -56,7 +56,7 @@ public class UserInterface {
 
 		return menuItems;
 	}
-	
+
 	public String getUserInputForPrompt(String prompt) {
 		present(prompt);
 		System.out.println("");
@@ -84,7 +84,7 @@ public class UserInterface {
 		int response = -1;
 
 		// Get user input
-		
+
 		String input = this.scanner.nextLine();
 		try {
 			response = Integer.parseInt(input.trim()) - 1;
@@ -100,44 +100,53 @@ public class UserInterface {
 		}
 		return response;
 	}
-	
-	
+
 	/**
-	 * Prints the temperature information for the selected city for a certain number of days
+	 * Prints the temperature information for the selected city for a certain number
+	 * of days
 	 * 
 	 * @author steve
 	 * @param container - forecast container containing weather/city information
-	 * @param oneDay - if "1", print forecast for only today. if "2", print for all days available
 	 */
-	public void outputForecast(ForecastContainer container, String oneDay) {
-		String datetime = container.time; 
+	public void outputForecast(ForecastContainer container) {
+		String datetime = container.time;
 		String date = datetime.substring(0, datetime.indexOf("T"));
-		if (oneDay.equals("1")) {
-			boolean notFound = true;
-			// should be the first one, but check anyways to make sure date matches today
-			for (Forecast f : container.consolidated_weather) {
-				if(f.applicable_date.equals(date)) {
-					this.outputDateTime(container);
-					System.out.println("\tTemp: " + f.the_temp + "\u00B0" + "C");
-					notFound = false;
-					break;
-				}
-			}
-			if(notFound) {
-				System.out.println("\tCould not find weather for this date at this location");
-			}
+
+		System.out.println("Briefing for " + container.title + ":");
+		for (Forecast f : container.consolidated_weather) {
+			date = f.applicable_date;
+			System.out.println("\tDate: " + date);
+			System.out.println("\tTemp: " + f.the_temp + "\u00B0" + "C");
 		}
-		else {
-			System.out.println("Briefing for " + container.title + ":");
-			for (Forecast f : container.consolidated_weather) {
-				date = f.applicable_date;
-				System.out.println("\tDate: " + date);
-				System.out.println("\tTemp: " + f.the_temp + "\u00B0" + "C");
-			}
-		}
-		
+
 	}
-	
+
+	/**
+	 * Prints the temperature information for the selected city for a certain number
+	 * of days
+	 * 
+	 * @author steve
+	 * @param container - forecast container containing weather/city information
+	 */
+	public void outputCurrentWeather(ForecastContainer container) {
+		String datetime = container.time;
+		String date = datetime.substring(0, datetime.indexOf("T"));
+		boolean notFound = true;
+		// should be the first one, but check anyways to make sure date matches today
+		for (Forecast f : container.consolidated_weather) {
+			if (f.applicable_date.equals(date)) {
+				this.outputDateTime(container);
+				System.out.println("\tTemp: " + f.the_temp + "\u00B0" + "C");
+				notFound = false;
+				break;
+			}
+		}
+		if (notFound) {
+			System.out.println("\tCould not find weather for this date at this location");
+		}
+
+	}
+
 	/**
 	 * Prints the date and local time of the selected city to the UI
 	 * 
@@ -146,10 +155,10 @@ public class UserInterface {
 	 */
 	private void outputDateTime(ForecastContainer container) {
 		String datetime = container.time;
-		
+
 		String date = datetime.substring(0, datetime.indexOf("T"));
-		String time = datetime.substring(datetime.indexOf("T") + 1,datetime.indexOf("."));
-		
+		String time = datetime.substring(datetime.indexOf("T") + 1, datetime.indexOf("."));
+
 		System.out.println("Briefing for " + container.title + ":");
 		System.out.println("\tDate: " + date);
 		System.out.println("\tTime: " + time);
