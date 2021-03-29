@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 
 /**
  * Class to interface with the metaweather API
- * 
+ * https://www.metaweather.com/api/
  * @author ethanshry
  *
  */

@@ -33,7 +33,11 @@ public class UserInterface {
 	 * Presents the app's welcome message
 	 */
 	public void presentWelcome() {
-		System.out.println("Welcome to the DailyBriefing App!");
+		System.out.println("");
+		System.out.println("================ Welcome to the DailyBriefing App! ================");
+		System.out.println("-------------------------------------------------------------------");
+		System.out.println("To navigate menus, please type the number of the option you want to select");
+		System.out.println("");
 	}
 
 	/**
