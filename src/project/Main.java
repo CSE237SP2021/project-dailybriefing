@@ -36,6 +36,11 @@ public class Main {
 				String location = ui.getUserInputForPrompt("Ok, which location do you want to see the weather for?");
 				HashMap<String, String> locs = WeatherAPIInterface.findLocations(location);
 				ArrayList<String> options = new ArrayList<>(locs.keySet());
+				if (options.size() == 0) {
+					System.out.println("Unable to find a location match for that string. Try something more specific. " + 
+				"Cities with punctuation in them are especially finicky.");
+					break;
+				}
 				Collections.sort(options);
 				ui.present("We were able to find the following locations, please select the correct one:");
 				int locationSelection = ui.getMenuSelection(options, true);
