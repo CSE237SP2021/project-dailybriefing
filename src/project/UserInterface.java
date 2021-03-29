@@ -3,6 +3,8 @@ package project;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import project.WeatherAPIInterface.ForecastContainer;
+
 /**
  * Class to cleanly present an interface to the user
  * 
@@ -92,6 +94,23 @@ public class UserInterface {
 			return getMenuSelection(menuItems);
 		}
 		return response;
+	}
+	
+	/**
+	 * Prints the date and local time of the selected city to the UI
+	 * 
+	 * @author mark
+	 * @param container - the forecast container containing weather/city information
+	 */
+	public void outputDateTime(ForecastContainer container) {
+		String datetime = container.time;
+		
+		String date = datetime.substring(0, datetime.indexOf("T"));
+		String time = datetime.substring(datetime.indexOf("T") + 1,datetime.indexOf("."));
+		
+		System.out.println("Briefing for " + container.title + ":");
+		System.out.println("\tDate: " + date);
+		System.out.println("\tTime: " + time);
 	}
 
 }
