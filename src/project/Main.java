@@ -45,6 +45,7 @@ public class Main {
 						+ locationQuery);
 				// TODO actually get the weather for the coordinate
 				ForecastContainer currentForecast = WeatherAPIInterface.findForecasts(locationQuery);
+				ui.outputDateTime(currentForecast);
 				continue;
 			default:
 				// handles the QUIT case
