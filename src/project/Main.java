@@ -40,11 +40,20 @@ public class Main {
 				ui.present("We were able to find the following locations, please select the correct one:");
 				int locationSelection = ui.getMenuSelection(options);
 				String locationQuery = locs.get(options.get(locationSelection));
-				System.out.println("You have selected " + options.get(locationSelection) + " which has a woeid of "
-						+ locationQuery);
+				ui.present("You have selected " + options.get(locationSelection));
 				ForecastContainer currentForecast = WeatherAPIInterface.findForecasts(locationQuery);
-				String forecastOption = ui.getUserInputForPrompt("What would you like?\n1. Today's weather\n2. A weather forecast for today and future days");
-				ui.outputForecast(currentForecast, forecastOption);
+				
+				options = new ArrayList<>();
+				options.add("Today's weather");
+				options.add("A weather forecast for today and future days");
+				ui.present("What would you like?");
+				int weatherSelection = ui.getMenuSelection(options);
+				switch (weatherSelection) {
+				case 0:
+					ui.outputCurrentWeather(currentForecast);
+				default:
+					ui.outputForecast(currentForecast);
+				}
 				continue;
 			default:
 				// handles the QUIT case
