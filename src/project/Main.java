@@ -43,9 +43,9 @@ public class Main {
 				String locationQuery = locs.get(options.get(locationSelection));
 				System.out.println("You have selected " + options.get(locationSelection) + " which has a woeid of "
 						+ locationQuery);
-				// TODO actually get the weather for the coordinate
 				ForecastContainer currentForecast = WeatherAPIInterface.findForecasts(locationQuery);
 				ui.outputDateTime(currentForecast);
+				ui.outputForecast(currentForecast, true);
 				continue;
 			default:
 				// handles the QUIT case

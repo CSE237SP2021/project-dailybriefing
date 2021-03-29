@@ -3,6 +3,7 @@ package project;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import project.WeatherAPIInterface.Forecast;
 import project.WeatherAPIInterface.ForecastContainer;
 
 /**
@@ -94,6 +95,32 @@ public class UserInterface {
 			return getMenuSelection(menuItems);
 		}
 		return response;
+	}
+	
+	
+	/**
+	 * Prints the temperature information for the selected city for a certain number of days
+	 * 
+	 * @author steve
+	 * @param container - forecast container containing weather/city information
+	 * @param oneDay - if true, print only one day's worth of data. If false, print all days.
+	 */
+	public void outputForecast(ForecastContainer container, boolean oneDay) {
+		if (oneDay) {
+			String datetime = container.time; 
+			
+			String date = datetime.substring(0, datetime.indexOf("T"));
+			// should be the first one, but check anyways to make sure date matches today
+			for (Forecast f : container.consolidated_weather) {
+				if(f.applicable_date.equals(date)) {
+					System.out.println("\tTemp: " + f.the_temp +"\u00B0"+"C");
+				}
+			}
+		}
+		else {
+			
+		}
+		
 	}
 	
 	/**
