@@ -15,7 +15,7 @@ public class Main {
 		ArrayList<String> options = new ArrayList<>();
 		options.add("Get weather for a specified location");
 		options.add("Quit");
-		int selection = ui.getMenuSelection(options);
+		int selection = ui.getMenuSelection(options, true);
 		switch (selection) {
 		case 0:
 			return MainMenuSelection.GetWeatherForLocation;
@@ -38,7 +38,7 @@ public class Main {
 				ArrayList<String> options = new ArrayList<>(locs.keySet());
 				Collections.sort(options);
 				ui.present("We were able to find the following locations, please select the correct one:");
-				int locationSelection = ui.getMenuSelection(options);
+				int locationSelection = ui.getMenuSelection(options, true);
 				String locationQuery = locs.get(options.get(locationSelection));
 				System.out.println("You have selected " + options.get(locationSelection) + " which has a woeid of "
 						+ locationQuery);
