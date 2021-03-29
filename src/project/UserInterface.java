@@ -3,6 +3,7 @@ package project;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import project.WeatherAPIInterface.Forecast;
 import project.WeatherAPIInterface.ForecastContainer;
 
 /**
@@ -96,13 +97,50 @@ public class UserInterface {
 		return response;
 	}
 	
+	
+	/**
+	 * Prints the temperature information for the selected city for a certain number of days
+	 * 
+	 * @author steve
+	 * @param container - forecast container containing weather/city information
+	 * @param oneDay - if "1", print forecast for only today. if "2", print for all days available
+	 */
+	public void outputForecast(ForecastContainer container, String oneDay) {
+		String datetime = container.time; 
+		String date = datetime.substring(0, datetime.indexOf("T"));
+		if (oneDay.equals("1")) {
+			boolean notFound = true;
+			// should be the first one, but check anyways to make sure date matches today
+			for (Forecast f : container.consolidated_weather) {
+				if(f.applicable_date.equals(date)) {
+					this.outputDateTime(container);
+					System.out.println("\tTemp: " + f.the_temp + "\u00B0" + "C");
+					notFound = false;
+					break;
+				}
+			}
+			if(notFound) {
+				System.out.println("\tCould not find weather for this date at this location");
+			}
+		}
+		else {
+			System.out.println("Briefing for " + container.title + ":");
+			for (Forecast f : container.consolidated_weather) {
+				date = f.applicable_date;
+				System.out.println("\tDate: " + date);
+				System.out.println("\tTemp: " + f.the_temp + "\u00B0" + "C");
+			}
+		}
+		
+	}
+	
 	/**
 	 * Prints the date and local time of the selected city to the UI
 	 * 
 	 * @author mark
 	 * @param container - the forecast container containing weather/city information
 	 */
-	public void outputDateTime(ForecastContainer container) {
+	private void outputDateTime(ForecastContainer container) {
 		String datetime = container.time;
 		
 		String date = datetime.substring(0, datetime.indexOf("T"));
