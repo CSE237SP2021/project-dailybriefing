@@ -6,6 +6,8 @@ import java.util.Scanner;
 import project.WeatherAPIInterface.Forecast;
 import project.WeatherAPIInterface.ForecastContainer;
 
+
+
 /**
  * Class to cleanly present an interface to the user
  * 
@@ -168,7 +170,10 @@ public class UserInterface {
 		System.out.println("\tTime: " + time);
 	}
 	
-	private String formatTemp(String temp) {
+	public String formatTemp(String temp) {
+		if (temp == null || temp.trim().isEmpty()) {
+			return "could not find";
+		}
 		String ret;
 		if(temp.length() > 5) {
 			ret = temp.substring(0, 5);
