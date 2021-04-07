@@ -143,6 +143,7 @@ public class UserInterface {
 			if (f.applicable_date.equals(date)) {
 				this.outputDateTime(container);
 				System.out.println("\tTemp: " + formatTemp(f.the_temp));
+				System.out.println("\tClothing Suggestion: " + this.getClothingSuggestion(f.the_temp));
 				notFound = false;
 				break;
 			}
@@ -183,6 +184,35 @@ public class UserInterface {
 		}
 		ret+="\u00B0" + "C";
 		return ret;
+	}
+	
+	/**
+	 * Gets the clothing suggestion for daily weather forecast
+	 * 
+	 * @author mark
+	 * @param temp - the temperature for the days forecast
+	 * @return - the clothing suggestion
+	 */
+	public String getClothingSuggestion(String temp) {
+		if(temp == null || temp.equals("")) {
+			return "cannot get clothing suggestion";
+		}
+		
+		double tempNum =  Double.parseDouble(temp);
+		
+		if (tempNum >= 25) {
+			return "It's hot! Try wearing shorts and T-shirt.";
+		} else if (tempNum < 25 && tempNum >= 20) {
+			return "It's warm. Try wearing a T-shirt with shorts or pants.";
+		} else if (tempNum < 20 && tempNum >= 15) {
+			return "Try wearing pants and a lightweight jacket.";
+		} else if (tempNum < 15 && tempNum >= 10) {
+			return "It's cool.  Wear pants and a jacket.";
+		} else if (tempNum < 10 && tempNum >= 0) {
+			return "It's cold.  You should wear warm jacket.";
+		} else {
+			return "It's freezing!.  Make sure to wear a winter jacket.";
+		}
 	}
 
 }
