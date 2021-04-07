@@ -143,7 +143,7 @@ public class UserInterface {
 			if (f.applicable_date.equals(date)) {
 				this.outputDateTime(container);
 				System.out.println("\tTemp: " + formatTemp(f.the_temp));
-				System.out.println("\tClothing Suggestion: " + this.getClothingSuggestion(f.the_temp));
+				System.out.println("\tClothing Suggestion: " + this.getClothingSuggestion(f.the_temp, f.weather_state_abbr));
 				notFound = false;
 				break;
 			}
@@ -191,9 +191,26 @@ public class UserInterface {
 	 * 
 	 * @author mark
 	 * @param temp - the temperature for the days forecast
+	 * @param state - the weather state abbreviation
 	 * @return - the clothing suggestion
 	 */
-	public String getClothingSuggestion(String temp) {
+	public String getClothingSuggestion(String temp, String state) {
+		
+		if(!state.equals("hc") && !state.equals("lc") && !state.equals("c")) {
+			return getStateSuggestion(state);
+		}
+		
+		return getTempSuggestion(temp);
+	}
+	
+	/**
+	 * Gets the clothing suggestion for daily weather forecast based on temp
+	 * 
+	 * @author mark
+	 * @param temp - the temperature for the days forecast
+	 * @return - the clothing suggestion
+	 */
+	public String getTempSuggestion(String temp) {
 		if(temp == null || temp.equals("")) {
 			return "cannot get clothing suggestion";
 		}
@@ -212,6 +229,32 @@ public class UserInterface {
 			return "It's cold.  You should wear warm jacket.";
 		} else {
 			return "It's freezing!.  Make sure to wear a winter jacket.";
+		}
+	}
+	
+	/**
+	 * Gets the clothing suggestion for daily weather forecast
+	 * 
+	 * @author mark
+	 * @param state - the weather state abbv
+	 * @return - the clothing suggestion
+	 */
+	public String getStateSuggestion(String state) {
+		String[] rainSuggests  = {"Bring an umbrella!", "Wear a raincoat!"};
+		String[] snowSuggests = {"Wear a hat and gloves!", "Wear winter boots!"};
+		
+		switch(state) {
+		case "t":
+		case "hr":
+		case "lr":
+		case "s":
+			return rainSuggests[(int)(Math.random()*(rainSuggests.length))];
+		case "sn":
+		case "sl":
+		case "h":
+			return snowSuggests[(int)(Math.random()*(snowSuggests.length))];
+		default:
+			return "unable to get suggestion";
 		}
 	}
 
