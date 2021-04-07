@@ -28,6 +28,13 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Gets a new location woeid from the user
+	 * Will add the location to the historical locations list
+	 * Will recursively call untill a valid location is specified
+	 * @param ui a handle to the UI instance
+	 * @return a valid woeid for a location to be used by the API
+	 */
 	public static String getNewLocationWoeid(UserInterface ui) {
 		String location = ui.getUserInputForPrompt("Which location do you want to see the weather for?");
 		HashMap<String, String> locs = WeatherAPIInterface.findLocations(location);
