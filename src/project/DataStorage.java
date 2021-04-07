@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.google.gson.Gson;
 
@@ -16,51 +17,106 @@ import project.WeatherAPIInterface.Source;
 
 public class DataStorage {
 
-	private static String CONFIG_PATH = "db.json";
+	// Ensures the path is relative to the project root
+	private static String CONFIG_PATH = System.getProperty("user.dir") + "/db.json";
 
+	/**
+	 * Data class for a location in the config file
+	 * 
+	 * @author ethanshry
+	 */
 	public static class BriefingConfigLocation {
 		public String name;
 		public String woeid;
-		public BriefingConfigLocation () {}
-		public BriefingConfigLocation (String loc, String woeid) {
+
+		public BriefingConfigLocation() {
+		}
+
+		public BriefingConfigLocation(String loc, String woeid) {
 			this.name = loc;
 			this.woeid = woeid;
 		}
 	}
 
+	/**
+	 * Data class for a DailyBriefing config file
+	 * 
+	 * @author ethanshry
+	 *
+	 */
 	public static class BriefingConfig {
 		public List<BriefingConfigLocation> locationHistory;
-		public BriefingConfig () {}
-	}
-	
-	private static BriefingConfig createNewConfig() {
 
+		public BriefingConfig() {
+		}
 	}
 
 	/**
-	 * Reads a config from the local database file
-	 * @return a valid (not-null) BriefingConfig
+	 * Helper method to create a new config object if it doesn't exist
+	 * 
+	 * @return
 	 */
-	private static BriefingConfig readConfig() {
-		BriefingConfig config = readConfig();
-		if (config == null) {
-			config = new BriefingConfig();
-		}
+	public static BriefingConfig newConfig() {
+		BriefingConfig config = new BriefingConfig();
 		config.locationHistory = new ArrayList<>();
 		return config;
 	}
 
-	private static void writeConfig(BriefingConfig config) {
+	/**
+	 * Reads a config from the local database file
+	 * 
+	 * @param path the path to the data file
+	 * @return a valid (not-null) BriefingConfig
+	 */
+	public static BriefingConfig readConfig(String path) {
 		try {
+			// Read the config to string
+			Scanner fileReader = new Scanner(new File(path));
+			String fileData = "";
+			while (fileReader.hasNextLine()) {
+				fileData += fileReader.nextLine();
+			}
+			fileReader.close();
+			// Parse object from string data
+			Gson gson = new Gson();
+			BriefingConfig config = gson.fromJson(fileData, BriefingConfig.class);
+			return config;
+		} catch (FileNotFoundException fileNotFoundException) {
+			return newConfig();
+		} catch (Exception e) {
+			// if there is another error, just return a new config as a failsafe
+			return newConfig();
+		}
+	}
+
+	/**
+	 * Wraps readConfig() with the default filepath
+	 * 
+	 * @return
+	 */
+	public static BriefingConfig readConfig() {
+		return readConfig(CONFIG_PATH);
+	}
+
+	/**
+	 * Writes an updated config to a file
+	 * 
+	 * @param config the updated config to write
+	 * @param path   the path to the data file
+	 */
+	public static void writeConfig(BriefingConfig config, String path) {
+		try {
+			// Convert string to object
 			Gson gson = new Gson();
 			String configData = gson.toJson(config);
-			// see https://stackoverflow.com/questions/2885173/how-do-i-create-a-file-and-write-to-it
-			Writer fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(CONFIG_PATH), "UTF-8"));
+			// see
+			// https://stackoverflow.com/questions/2885173/how-do-i-create-a-file-and-write-to-it
+			Writer fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
 			fileWriter.write(configData);
 			fileWriter.close();
 		} catch (FileNotFoundException fileNotFoundException) {
 			try {
-				File f = new File(CONFIG_PATH);
+				File f = new File(path);
 				f.createNewFile();
 				// Recursive call - this is O.K., because we will only create the file once and
 				// the path is static so we will never infinite loop
@@ -72,13 +128,31 @@ public class DataStorage {
 			}
 		} catch (Exception e) {
 			// other exception with writing to the file
-			// this isn't critical, it just means we couldn't cache the history, so this is probably O.K.
+			// this isn't critical, it just means we couldn't cache the history, so this is
+			// probably O.K.
 			return;
 		}
 	}
 
-	public static void writeLocationToHistory(String loc, String woeid) {
-		BriefingConfig config = readConfig();
+	/**
+	 * Wraps writeConfig() with the default filepath
+	 * 
+	 * @return
+	 */
+	public static void writeConfig(BriefingConfig config) {
+		writeConfig(config, CONFIG_PATH);
+	}
+
+	/**
+	 * Adds a new location to the config file Creates the file if it does not exist
+	 * No more than five locations will be created
+	 * 
+	 * @param loc   the name of the location
+	 * @param woeid of the location
+	 * @param path  the path to the data file
+	 */
+	public static void writeLocationToHistory(String loc, String woeid, String path) {
+		BriefingConfig config = readConfig(path);
 		BriefingConfigLocation newLoc = new BriefingConfigLocation(loc, woeid);
 		for (BriefingConfigLocation historyLocation : config.locationHistory) {
 			if (historyLocation.woeid.compareTo(newLoc.woeid) == 0) {
@@ -89,10 +163,35 @@ public class DataStorage {
 		if (config.locationHistory.size() > 5) {
 			config.locationHistory.remove(0);
 		}
-		writeConfig(config);
+		writeConfig(config, path);
 	}
 
-	public static List<BriefingConfigLocation> readLocationsFromHistory() {
+	/**
+	 * Wraps writeLocationToHistory() with the default config path
+	 * 
+	 * @return
+	 */
+	public static void writeLocationToHistory(String loc, String woeid) {
+		writeLocationToHistory(loc, woeid, CONFIG_PATH);
+	}
 
+	/**
+	 * Gets locations from the datafile
+	 * 
+	 * @param path the path to the data file
+	 * @return
+	 */
+	public static List<BriefingConfigLocation> readLocationsFromHistory(String path) {
+		BriefingConfig bc = readConfig(path);
+		return bc.locationHistory;
+	}
+
+	/**
+	 * Wraps readLocationsFromHistory() with the default config path
+	 * 
+	 * @return
+	 */
+	public static List<BriefingConfigLocation> readLocationsFromHistory() {
+		return readLocationsFromHistory(CONFIG_PATH);
 	}
 }
