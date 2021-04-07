@@ -191,6 +191,7 @@ public class UserInterface {
 	 * 
 	 * @author mark
 	 * @param temp - the temperature for the days forecast
+	 * @param state - the weather state abbreviation
 	 * @return - the clothing suggestion
 	 */
 	public String getClothingSuggestion(String temp, String state) {
@@ -202,6 +203,13 @@ public class UserInterface {
 		return getTempSuggestion(temp);
 	}
 	
+	/**
+	 * Gets the clothing suggestion for daily weather forecast based on temp
+	 * 
+	 * @author mark
+	 * @param temp - the temperature for the days forecast
+	 * @return - the clothing suggestion
+	 */
 	public String getTempSuggestion(String temp) {
 		if(temp == null || temp.equals("")) {
 			return "cannot get clothing suggestion";
@@ -224,6 +232,13 @@ public class UserInterface {
 		}
 	}
 	
+	/**
+	 * Gets the clothing suggestion for daily weather forecast
+	 * 
+	 * @author mark
+	 * @param state - the weather state abbv
+	 * @return - the clothing suggestion
+	 */
 	public String getStateSuggestion(String state) {
 		String[] rainSuggests  = {"Bring an umbrella!", "Wear a raincoat!"};
 		String[] snowSuggests = {"Wear a hat and gloves!", "Wear winter boots!"};
