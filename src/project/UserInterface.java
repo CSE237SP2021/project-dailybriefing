@@ -125,6 +125,7 @@ public class UserInterface {
 			date = f.applicable_date;
 			System.out.println("\tDate: " + date);
 			System.out.println("\tTemp: " + formatTemp(f.the_temp));
+			System.out.println("\tWeather: "+f.weather_state_name);
 		}
 	}
 
@@ -143,6 +144,7 @@ public class UserInterface {
 			if (f.applicable_date.equals(date)) {
 				this.outputDateTime(container);
 				System.out.println("\tTemp: " + formatTemp(f.the_temp));
+				outputWeatherConditions(f);
 				System.out.println("\tClothing Suggestion: " + this.getClothingSuggestion(f.the_temp, f.weather_state_abbr));
 				notFound = false;
 				break;
@@ -256,6 +258,19 @@ public class UserInterface {
 		default:
 			return "unable to get suggestion";
 		}
+	}
+	/**
+	 *Displays weather condition information such as wind, humdiity, air pressure, visibility, and weather
+	 *@author Clay
+	 *@param currentForecast- the forecast object for current date
+	 *
+	 */
+	public void outputWeatherConditions(Forecast currentForecast) {
+		System.out.println("\tWeather: "+currentForecast.weather_state_name);
+		System.out.println("\tWind: "+ currentForecast.wind_speed.substring(0,5) + " mph " + currentForecast.wind_direction_compass);
+		System.out.println("\tHumidity: "+ currentForecast.humidity+"%");
+		System.out.println("\tAir Pressure: "+currentForecast.air_pressure +" mbar");
+		System.out.println("\tVisibility: "+currentForecast.visibility.substring(0,5) +" miles");
 	}
 
 }
