@@ -39,99 +39,217 @@ public class UserInterfaceTest {
 		
 	}
 	
+/*
+ * 
+ * Tests for formatTemp function. 
+ * */
+	
 	@Test
-	public void testFormatTemp() {
-		UserInterface ui = new UserInterface(); 
-		String[] testItems = {
-			"10", "10.5", "10.55", "10.555", "10.5555555555555", null, ""
-		};
-		String[] expectedResults = {
-				"10", "10.5", "10.55", "10.55", "10.55", "could not find", "could not find"
-		};
-		// making sure test is valid
-		if (testItems.length != expectedResults.length) {
-			fail("testItems length is not equal to expectedResults length. Check the test file");
+	public void testFormatTempNoDecimal() {
+		UserInterface ui = new UserInterface();
+		String testItem = "10";
+		String expectedResult = "10"+"\u00B0"+"C";
+		if (!expectedResult.equals(ui.formatTemp(testItem))) {
+			fail("Expected "+ expectedResult + "for test item "+ testItem + "but got " + ui.formatTemp(testItem));
 		}
-		
-		// adding special characters to expected results
-		for (int i = 0; i < expectedResults.length; i++) {
-			if (expectedResults[i] != "could not find") {
-				expectedResults[i] += "\u00B0" + "C";
-			}
+	}
+	@Test
+	public void testFormatTempOneDecimal() {
+		UserInterface ui = new UserInterface();
+		String testItem = "10.5";
+		String expectedResult = "10.5"+"\u00B0"+"C";
+		if (!expectedResult.equals(ui.formatTemp(testItem))) {
+			fail("Expected "+ expectedResult + "for test item "+ testItem + "but got " + ui.formatTemp(testItem));
 		}
-		
-		// actually testing the arrays
-		for (int i = 0; i < testItems.length; i++) {
-			if (!expectedResults[i].equals(ui.formatTemp(testItems[i]))) {
-				fail("Expected " + expectedResults[i] + " for test item " + testItems[i] + " but got " + ui.formatTemp(testItems[i]));
-			}
+	}
+	
+	@Test
+	public void testFormatTempTwoDecimal() {
+		UserInterface ui = new UserInterface();
+		String testItem = "10.55";
+		String expectedResult = "10.55"+"\u00B0"+"C";
+		if (!expectedResult.equals(ui.formatTemp(testItem))) {
+			fail("Expected "+ expectedResult + "for test item "+ testItem + "but got " + ui.formatTemp(testItem));
+		}
+	}
+	
+	@Test
+	public void testFormatTempExcessiveDecimal() {
+		UserInterface ui = new UserInterface();
+		String testItem = "10.5555555555555";
+		String expectedResult = "10.55"+"\u00B0"+"C";
+		if (!expectedResult.equals(ui.formatTemp(testItem))) {
+			fail("Expected "+ expectedResult + "for test item "+ testItem + "but got " + ui.formatTemp(testItem));
+		}
+	}
+	
+	@Test
+	public void testFormatTempEmpty() {
+		UserInterface ui = new UserInterface();
+		String testItem = "";
+		String expectedResult = "could not find";
+		if (!expectedResult.equals(ui.formatTemp(testItem))) {
+			fail("Expected "+ expectedResult + "for test item "+ testItem + "but got " + ui.formatTemp(testItem));
+		}
+	}
+	
+	@Test
+	public void testFormatTempNull() {
+		UserInterface ui = new UserInterface();
+		String testItem = null;
+		String expectedResult = "could not find";
+		if (!expectedResult.equals(ui.formatTemp(testItem))) {
+			fail("Expected "+ expectedResult + "for test item "+ testItem + "but got " + ui.formatTemp(testItem));
 		}
 	}
 	
 	
 	@Test
-	public void testTempSuggestion() {
+	public void testTempSuggestionHot() {
 		UserInterface ui = new UserInterface();
-		String[] testItems = {
-				"26", "25", "24", "20", "17", "15", "13", "10", "5", "0", "-1", "", null
-			};
-		
-		String[] expectedResults = {
-				"It's hot! Try wearing shorts and T-shirt.",
-				"It's hot! Try wearing shorts and T-shirt.",
-				"It's warm. Try wearing a T-shirt with shorts or pants.",
-				"It's warm. Try wearing a T-shirt with shorts or pants.",
-				"Try wearing pants and a lightweight jacket.",
-				"Try wearing pants and a lightweight jacket.",
-				"It's cool.  Wear pants and a jacket.",
-				"It's cool.  Wear pants and a jacket.",
-				"It's cold.  You should wear warm jacket.",
-				"It's cold.  You should wear warm jacket.",
-				"It's freezing!.  Make sure to wear a winter jacket.",
-				"cannot get clothing suggestion",
-				"cannot get clothing suggestion"
-		};
-		
-		for (int i = 0; i < testItems.length; i++) {
-			if (!expectedResults[i].equals(ui.getTempSuggestion(testItems[i]))) {
-				fail("Expected " + expectedResults[i] + " for test item " + testItems[i] + " but got " + ui.getTempSuggestion(testItems[i]));
-			}
+		String testTemp = "25";
+		String expectedResult = "It's hot! Try wearing shorts and T-shirt.";
+		if(!expectedResult.equals(ui.getTempSuggestion(testTemp))){
+			fail("Expected " + expectedResult + " for test item " + testTemp + " but got " + ui.getTempSuggestion(testTemp));
+		}
+	}
+	@Test
+	public void testTempSuggestionWarm() {
+		UserInterface ui = new UserInterface();
+		String testTempMax = "24";
+		String testTempMin = "20";
+		String expectedResult = "It's warm. Try wearing a T-shirt with shorts or pants.";
+		if(!expectedResult.equals(ui.getTempSuggestion(testTempMax))){
+			fail("Expected " + expectedResult + " for test item " + testTempMax + " but got " + ui.getTempSuggestion(testTempMax));
+		}
+		if(!expectedResult.equals(ui.getTempSuggestion(testTempMin))){
+			fail("Expected " + expectedResult + " for test item " + testTempMin + " but got " + ui.getTempSuggestion(testTempMin));
+		}
+	}
+	@Test
+	public void testTempSuggestionAmbient() {
+		UserInterface ui = new UserInterface();
+		String testTempMax = "19";
+		String testTempMin = "15";
+		String expectedResult = "Try wearing pants and a lightweight jacket.";
+		if(!expectedResult.equals(ui.getTempSuggestion(testTempMax))){
+			fail("Expected " + expectedResult + " for test item " + testTempMax + " but got " + ui.getTempSuggestion(testTempMax));
+		}
+		if(!expectedResult.equals(ui.getTempSuggestion(testTempMin))){
+			fail("Expected " + expectedResult + " for test item " + testTempMin + " but got " + ui.getTempSuggestion(testTempMin));
+		}
+	}
+	@Test
+	public void testTempSuggestionCool() {
+		UserInterface ui = new UserInterface();
+		String testTempMax = "14";
+		String testTempMin= "10";
+		String expectedResult = "It's cool.  Wear pants and a jacket.";
+		if(!expectedResult.equals(ui.getTempSuggestion(testTempMax))){
+			fail("Expected " + expectedResult + " for test item " + testTempMax + " but got " + ui.getTempSuggestion(testTempMax));
+		}
+		if(!expectedResult.equals(ui.getTempSuggestion(testTempMin))){
+			fail("Expected " + expectedResult + " for test item " + testTempMin + " but got " + ui.getTempSuggestion(testTempMin));
+		}
+	}
+	@Test
+	public void testTempSuggestionCold() {
+		UserInterface ui = new UserInterface();
+		String testTempMax = "5";
+		String testTempMin = "0";
+		String expectedResult = "It's cold.  You should wear warm jacket.";
+		if(!expectedResult.equals(ui.getTempSuggestion(testTempMax))){
+			fail("Expected " + expectedResult + " for test item " + testTempMax + " but got " + ui.getTempSuggestion(testTempMax));
+		}
+		if(!expectedResult.equals(ui.getTempSuggestion(testTempMin))){
+			fail("Expected " + expectedResult + " for test item " + testTempMin + " but got " + ui.getTempSuggestion(testTempMin));
+		}
+	}
+	@Test
+	public void testTempSuggestionFreeze() {
+		UserInterface ui = new UserInterface();
+		String testTemp = "-1";
+		String expectedResult = "It's freezing!.  Make sure to wear a winter jacket.";
+		if(!expectedResult.equals(ui.getTempSuggestion(testTemp))){
+			fail("Expected " + expectedResult + " for test item " + testTemp + " but got " + ui.getTempSuggestion(testTemp));
+		}
+	}
+	@Test
+	public void testTempSuggestionEmptyOrNull() {
+		UserInterface ui = new UserInterface();
+		String testTemp = "";
+		String testTempNull = null;
+		String expectedResult = "cannot get clothing suggestion";
+		if(!expectedResult.equals(ui.getTempSuggestion(testTemp))){
+			fail("Expected " + expectedResult + " for test item " + testTemp + " but got " + ui.getTempSuggestion(testTemp));
+		}
+		if(!expectedResult.equals(ui.getTempSuggestion(testTempNull))){
+			fail("Expected " + expectedResult + " for test item " + testTempNull + " but got " + ui.getTempSuggestion(testTempNull));
 		}
 	}
 	
 	@Test
-	public void testStateSuggestion() {
+	public void testStateSuggestionRainyWeather() {
 		UserInterface ui = new UserInterface();
-		String[] testItems = {
-				"sn", "sl", "h", "t", "hr", "lr", "s", "hc", "lc", "c", ""
-			};
+		String testItemThunder = "t";
+		String testItemHeavyRain = "hr";
+		String testItemLightRain = "lr";
+		String testItemShowers = "s";
 		
 		Set<String> rainRes = new HashSet<String>();
 		rainRes.add("Bring an umbrella!");
 		rainRes.add("Wear a raincoat!");
 		
+		if (!rainRes.contains(ui.getStateSuggestion(testItemThunder))) {
+			fail("Expected output in \"snowRes\" for test item " + testItemThunder + " but got " + ui.getStateSuggestion(testItemThunder));
+		}
+		if (!rainRes.contains(ui.getStateSuggestion(testItemHeavyRain))) {
+			fail("Expected output in \"snowRes\" for test item " + testItemHeavyRain + " but got " + ui.getStateSuggestion(testItemHeavyRain));
+
+		}
+		if (!rainRes.contains(ui.getStateSuggestion(testItemLightRain))) {
+			fail("Expected output in \"snowRes\" for test item " + testItemLightRain + " but got " + ui.getStateSuggestion(testItemLightRain));
+
+		} 
+		if (!rainRes.contains(ui.getStateSuggestion(testItemShowers))) {
+			fail("Expected output in \"snowRes\" for test item " + testItemShowers + " but got " + ui.getStateSuggestion(testItemShowers));
+
+		} 
+	}
+	@Test
+	public void testStateSuggestionWinterWeather() {
+		UserInterface ui = new UserInterface();
+		String testItemSnow = "sn";
+		String testItemSleet = "sl";
+		String testItemHail = "h";
+		
 		Set<String> snowRes = new HashSet<String>();
 		snowRes.add("Wear a hat and gloves!");
 		snowRes.add("Wear winter boots!");
 		
-		
-		for (int i = 0; i < testItems.length; i++) {
-			if(i <= 2) {
-				// checks snow type suggestions
-				if (!snowRes.contains(ui.getStateSuggestion(testItems[i]))) {
-					fail("Expected output in \"snowRes\" for test item " + testItems[i] + " but got " + ui.getStateSuggestion(testItems[i]));
-				}
-				// checks rain type suggestions
-			} else if (i > 2 && i < testItems.length - 4) {
-				if (!rainRes.contains(ui.getStateSuggestion(testItems[i]))) {
-					fail("Expected output in \"rainRes\" for test item " + testItems[i] + " but got " + ui.getStateSuggestion(testItems[i]));
-				}
-			} else {
-				// checks clear types for no suggestion
-				if (!ui.getStateSuggestion(testItems[i]).equals("unable to get suggestion")) {
-					fail("Expected output \"unable to get suggestion\" for test item " + testItems[i] + " but got " + ui.getStateSuggestion(testItems[i]));
-				}
-			}
+		if (!snowRes.contains(ui.getStateSuggestion(testItemSnow))) {
+			fail("Expected output in \"snowRes\" for test item " + testItemSnow + " but got " + ui.getStateSuggestion(testItemSnow));
+		}
+		if (!snowRes.contains(ui.getStateSuggestion(testItemSleet))) {
+			fail("Expected output in \"snowRes\" for test item " + testItemSleet + " but got " + ui.getStateSuggestion(testItemSleet));
+
+		}
+		if (!snowRes.contains(ui.getStateSuggestion(testItemHail))) {
+			fail("Expected output in \"snowRes\" for test item " + testItemHail + " but got " + ui.getStateSuggestion(testItemHail));
+
+		} 
+	}
+	@Test
+	public void testStateSuggestionNoSuggestion() {
+		UserInterface ui = new UserInterface();
+		String testItemEmpty = "";
+		String testItemNull = null;
+		if (!ui.getStateSuggestion(testItemEmpty).equals("unable to get suggestion")) {
+			fail("Expected output \"unable to get suggestion\" for test item " + testItemEmpty + " but got " + ui.getStateSuggestion(testItemEmpty));
+		}
+		if (!ui.getStateSuggestion(testItemNull).equals("unable to get suggestion")) {
+			fail("Expected output \"unable to get suggestion\" for test item " + testItemNull + " but got " + ui.getStateSuggestion(testItemNull));
 		}
 	}
+	
 }

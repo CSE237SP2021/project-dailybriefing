@@ -242,6 +242,10 @@ public class UserInterface {
 	 * @return - the clothing suggestion
 	 */
 	public String getStateSuggestion(String state) {
+		if(state == null) {
+			return "unable to get suggestion";
+		}
+		
 		String[] rainSuggests  = {"Bring an umbrella!", "Wear a raincoat!"};
 		String[] snowSuggests = {"Wear a hat and gloves!", "Wear winter boots!"};
 		
