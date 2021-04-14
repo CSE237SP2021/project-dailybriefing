@@ -89,6 +89,19 @@ public class DataStorageTest {
 	}
 	
 	@Test
+	public void readingDefaultLocationIsCorrect() {
+		String path = System.getProperty("user.dir") + "/datafiles/defaultLocConfig.json";
+		
+		BriefingConfig bc = DataStorage.readConfig(path);
+		
+		List<BriefingConfigLocation> defaultLoc = DataStorage.readDefaultFromHistory(path);
+		
+		assertTrue("Correct city woeid is read", bc.defaultLocation.get(0).woeid.equals(defaultLoc.get(0).woeid));
+		
+		assertTrue("Correct city name is read", bc.defaultLocation.get(0).name.equals(defaultLoc.get(0).name));
+	}
+	
+	@Test
 	public void isDefaultEmptyIsCorrect() {
 		String path = System.getProperty("user.dir") + "/datafiles/defaultLocConfig.json";
 		
