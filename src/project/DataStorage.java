@@ -46,6 +46,7 @@ public class DataStorage {
 	 */
 	public static class BriefingConfig {
 		public List<BriefingConfigLocation> locationHistory;
+		public List<BriefingConfigLocation> defaultLocation;
 
 		public BriefingConfig() {
 		}
@@ -59,6 +60,7 @@ public class DataStorage {
 	public static BriefingConfig newConfig() {
 		BriefingConfig config = new BriefingConfig();
 		config.locationHistory = new ArrayList<>();
+		config.defaultLocation = new ArrayList<>();
 		return config;
 	}
 
@@ -193,5 +195,66 @@ public class DataStorage {
 	 */
 	public static List<BriefingConfigLocation> readLocationsFromHistory() {
 		return readLocationsFromHistory(CONFIG_PATH);
+	}
+	
+	/**
+	 * Adds a new default location to the config file. Create the file if it does not exit
+	 * Only one default location can be added
+	 * 
+	 * @param loc	the name of the location
+	 * @param woeid of the location
+	 * @param path	the path to the data file
+	 */
+	public static void writeDefaultToHistory(String loc, String woeid, String path) {
+		BriefingConfig config = readConfig(path);
+		BriefingConfigLocation newLoc = new BriefingConfigLocation(loc, woeid);
+		config.defaultLocation.add(newLoc);
+		if (config.defaultLocation.size() > 1) {
+			config.defaultLocation.remove(0);
+		}
+		writeConfig(config, path);
+	}
+	
+	/**
+	 * Wraps writeDefaultToHistory() with the default config path
+	 */
+	public static void writeDefaultToHistory(String loc, String woeid) {
+		writeDefaultToHistory(loc, woeid, CONFIG_PATH);
+	}
+	
+	/**
+	 * Gets default history from the datafile
+	 * @param path the path to the data file
+	 * @return the default history BriefingConfig
+	 */
+	public static List<BriefingConfigLocation> readDefaultFromHistory(String path) {
+		BriefingConfig bc = readConfig(path);
+		return bc.defaultLocation;
+	}
+	
+	/**
+	 * Wraps readDefaultFromHistory() with the default config path
+	 * @return
+	 */
+	public static List<BriefingConfigLocation> readDefaultFromHistory() {
+		return readDefaultFromHistory(CONFIG_PATH);
+	}
+	
+	/**
+	 * Tests if the user has set a default location
+	 * @return true if the default location for the user is empty
+	 */
+	public static boolean isDefaultEmpty(String path) {
+		BriefingConfig bc = readConfig(path);
+		if (bc.defaultLocation == null) return true;
+		else return bc.defaultLocation.size() == 0;
+	}
+	
+	/**
+	 * Wraps isDefaultEmpty() with the default config path
+	 * @return isDefaultEmpty() for the default config path
+	 */
+	public static boolean isDefaultEmpty() {
+		return isDefaultEmpty(CONFIG_PATH);
 	}
 }
