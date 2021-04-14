@@ -3,6 +3,7 @@ package test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.junit.Test;
@@ -45,6 +46,56 @@ public class WeatherAPIInterfaceTest {
 			assertTrue("Each forecast has max temp", f.max_temp != null);
 			assertTrue("Each forecast has the temp", f.the_temp != null);
 		}
+	}
+	@Test
+	public void testCanGetForecastWeather() {
+		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
+		Forecast f = forecasts.consolidated_weather.get(0);
+		ArrayList<String> potentialWeatherName = new ArrayList<String>();
+		potentialWeatherName.add("Snow");
+		potentialWeatherName.add("Sleet");
+		potentialWeatherName.add("Hail");
+		potentialWeatherName.add("Thunderstorm");
+		potentialWeatherName.add("Heavy Rain");
+		potentialWeatherName.add("Light Rain");
+		potentialWeatherName.add("Showers");
+		potentialWeatherName.add("Heavy Cloud");
+		potentialWeatherName.add("Light Cloud");
+		potentialWeatherName.add("Clear");
+		if(!potentialWeatherName.contains(f.weather_state_name)) {
+			fail("Forecast weather state name is not in list of possible names" + f.weather_state_name);
+		}
+	}
+	
+	@Test
+	public void testCanGetForecastWindSpeed() {
+		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
+		Forecast f = forecasts.consolidated_weather.get(0);
+		assertTrue("Forecast has wind speed", f.wind_speed != null || f.wind_speed != "");
+	}
+	@Test
+	public void testCanGetForecastWindDirection() {
+		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
+		Forecast f = forecasts.consolidated_weather.get(0);
+		assertTrue("Forecast has wind direction", f.wind_direction != null || f.wind_direction != "");
+	}
+	@Test
+	public void testCanGetForecastHumidity() {
+		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
+		Forecast f = forecasts.consolidated_weather.get(0);
+		assertTrue("Forecast has humidity", f.humidity != null || f.humidity != "");
+	}
+	@Test
+	public void testCanGetForecastAirPressure() {
+		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
+		Forecast f = forecasts.consolidated_weather.get(0);
+		assertTrue("Forecast has air pressure", f.air_pressure != null || f.air_pressure != "");
+	}
+	@Test
+	public void testCanGetForecastWindVisibility() {
+		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
+		Forecast f = forecasts.consolidated_weather.get(0);
+		assertTrue("Forecast has visibility", f.visibility != null || f.visibility != "");
 	}
 	
 }
