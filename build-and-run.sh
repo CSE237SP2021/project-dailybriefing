@@ -1,3 +1,4 @@
+#!/bin/bash
 # compiles the project, linking the GSON impl
 javac -cp lib/* ./src/project/*.java
 
