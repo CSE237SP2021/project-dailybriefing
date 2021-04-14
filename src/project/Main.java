@@ -65,16 +65,6 @@ public class Main {
 		}
 		return locationQuery;
 	}
-	
-	/**
-	 * Checks if the user has a current default location
-	 * @return true if the user has no current default location
-	 */
-	public static boolean isDefaultEmpty() {
-		List<BriefingConfigLocation> defaultLoc = DataStorage.readDefaultFromHistory();
-		if (defaultLoc == null) return true;
-		return defaultLoc.size() == 0;
-	}
 
 	public static void main(String[] args) {
 
@@ -85,7 +75,7 @@ public class Main {
 			MainMenuSelection selection = presentMainMenu(ui);
 			switch (selection) {
 			case GetDailyBriefing:
-				if (isDefaultEmpty()) {
+				if (DataStorage.isDefaultEmpty()) {
 					ui.present("No default location found. Please set one from the main menu");
 					break;
 				}

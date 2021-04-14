@@ -239,4 +239,22 @@ public class DataStorage {
 	public static List<BriefingConfigLocation> readDefaultFromHistory() {
 		return readDefaultFromHistory(CONFIG_PATH);
 	}
+	
+	/**
+	 * Tests if the user has set a default location
+	 * @return true if the default location for the user is empty
+	 */
+	public static boolean isDefaultEmpty(String path) {
+		BriefingConfig bc = readConfig(path);
+		if (bc.defaultLocation == null) return true;
+		else return bc.defaultLocation.size() == 0;
+	}
+	
+	/**
+	 * Wraps isDefaultEmpty() with the default config path
+	 * @return isDefaultEmpty() for the default config path
+	 */
+	public static boolean isDefaultEmpty() {
+		return isDefaultEmpty(CONFIG_PATH);
+	}
 }
