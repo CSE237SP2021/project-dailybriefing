@@ -70,32 +70,32 @@ public class WeatherAPIInterfaceTest {
 	@Test
 	public void testCanGetForecastWindSpeed() {
 		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
-		Forecast f = forecasts.consolidated_weather.get(0);
-		assertTrue("Forecast has wind speed", f.wind_speed != null || f.wind_speed != "");
+		Forecast testForecast = forecasts.consolidated_weather.get(0);
+		assertTrue("Forecast has wind speed", testForecast.wind_speed != null || testForecast.wind_speed != "");
 	}
 	@Test
 	public void testCanGetForecastWindDirection() {
 		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
-		Forecast f = forecasts.consolidated_weather.get(0);
-		assertTrue("Forecast has wind direction", f.wind_direction != null || f.wind_direction != "");
+		Forecast testForecast = forecasts.consolidated_weather.get(0);
+		assertTrue("Forecast has wind direction", testForecast.wind_direction != null || testForecast.wind_direction != "");
 	}
 	@Test
 	public void testCanGetForecastHumidity() {
 		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
-		Forecast f = forecasts.consolidated_weather.get(0);
-		assertTrue("Forecast has humidity", f.humidity != null || f.humidity != "");
+		Forecast testForecast = forecasts.consolidated_weather.get(0);
+		assertTrue("Forecast has humidity", testForecast.humidity != null || testForecast.humidity != "");
 	}
 	@Test
 	public void testCanGetForecastAirPressure() {
 		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
-		Forecast f = forecasts.consolidated_weather.get(0);
-		assertTrue("Forecast has air pressure", f.air_pressure != null || f.air_pressure != "");
+		Forecast testForecast = forecasts.consolidated_weather.get(0);
+		assertTrue("Forecast has air pressure", testForecast.air_pressure != null || testForecast.air_pressure != "");
 	}
 	@Test
-	public void testCanGetForecastWindVisibility() {
+	public void testCanGetForecastVisibility() {
 		ForecastContainer forecasts = WeatherAPIInterface.findForecasts("44418");
-		Forecast f = forecasts.consolidated_weather.get(0);
-		assertTrue("Forecast has visibility", f.visibility != null || f.visibility != "");
+		Forecast testForecast = forecasts.consolidated_weather.get(0);
+		assertTrue("Forecast has visibility", testForecast.visibility != null || testForecast.visibility != "");
 	}
 	
 }
