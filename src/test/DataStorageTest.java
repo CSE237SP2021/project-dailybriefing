@@ -1,5 +1,6 @@
 package test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -85,5 +86,16 @@ public class DataStorageTest {
 		List<BriefingConfigLocation> locations = DataStorage.readLocationsFromHistory(path);
 
 		assertTrue("The history sizes should match", bc.locationHistory.size() == locations.size());
+	}
+	
+	@Test
+	public void isDefaultEmptyIsCorrect() {
+		String path = System.getProperty("user.dir") + "/datafiles/defaultLocConfig.json";
+		
+		assertFalse("Default shouldn't be empty for defaultLocConfig.json", DataStorage.isDefaultEmpty(path));
+		
+		path = System.getProperty("user.dir") + "/datafiles/newData.json";
+		
+		assertTrue("Default should be empty for newData.json", DataStorage.isDefaultEmpty(path));
 	}
 }
