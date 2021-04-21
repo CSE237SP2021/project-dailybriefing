@@ -1,8 +1,10 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
+import project.DayInHistory.HistoryEvent;
 import project.WeatherAPIInterface.Forecast;
 import project.WeatherAPIInterface.ForecastContainer;
 
@@ -108,6 +110,15 @@ public class UserInterface {
 			return getMenuSelection(menuItems, false);
 		}
 		return response;
+	}
+	
+	public void outputHistoryEvent(ArrayList<HistoryEvent> events) {
+		if (events.size() == 0) {
+			return;
+		}
+		// get a random event from the list
+		HistoryEvent ev = events.get(new Random().nextInt(events.size()));
+		System.out.println("On this day in " + Integer.parseInt(ev.year) + " A.D., " + ev.title);
 	}
 
 	/**
