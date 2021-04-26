@@ -252,4 +252,20 @@ public class UserInterfaceTest {
 		}
 	}
 	
+	@Test
+	public void formatBoxTest() {
+		UserInterface ui = new UserInterface();
+		ArrayList<String> entries = new ArrayList<>();
+		entries.add("hello world");
+		entries.add("another entry");
+		entries.add("short");
+		entries.add("super long entry for testing");
+		String box = ui.formatBox(entries);
+		String[] output = box.split("\n");
+		int size = output[1].length();
+		for (int i = 0; i < output.length; i++) {
+			assertTrue("all entries in a box must have the same length", size == output[i].length());
+		}
+	}
+	
 }

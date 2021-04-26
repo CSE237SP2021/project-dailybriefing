@@ -1,8 +1,10 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
+import project.DayInHistory.HistoryEvent;
 import project.WeatherAPIInterface.Forecast;
 import project.WeatherAPIInterface.ForecastContainer;
 
@@ -108,6 +110,69 @@ public class UserInterface {
 			return getMenuSelection(menuItems, false);
 		}
 		return response;
+	}
+	
+	/**
+	 * Displays a random historyEvent from the list provided
+	 * @param events
+	 */
+	public void outputHistoryEvent(ArrayList<HistoryEvent> events) {
+		if (events.size() == 0) {
+			return;
+		}
+		// get a random event from the list
+		HistoryEvent ev = events.get(new Random().nextInt(events.size()));
+		ArrayList<String> boxEntries = new ArrayList<>();
+		String header = "Historical Fact of the Day";
+		String content = Integer.parseInt(ev.year) + " A.D. | " + ev.title;
+		boxEntries.add(header);
+		boxEntries.add(content);
+		String box = this.formatBox(boxEntries);
+		System.out.print(box);
+	}
+	
+	/**
+	 * Formats and prints a box around a list of items
+	 * The box will look like the following:
+	 * +----------------+
+	 * | Hello, World!  |
+	 * +----------------+
+	 * | Item Number 2! |
+	 * +----------------+
+	 * @param entries a list of lines in the box
+	 */
+	public String formatBox(ArrayList<String> entries) {
+		String box = "";
+		int lineSize = 0;
+		for (String e : entries) {
+			if (e.length() > lineSize) {
+				lineSize = e.length();
+			}
+		}
+		// Add four to the length so we can add "| " and " |" to the ends of each line
+		lineSize = lineSize + 4;
+		String seperator = "";
+		while (seperator.length() < lineSize) {
+			if (seperator.length() == 0 || seperator.length() == lineSize - 1) {
+				seperator += "+";
+			} else {
+				seperator += "-";
+			}
+		}
+		box += seperator + "\n";
+		for (String entry : entries) {
+			String line = "| " + entry;
+			while (line.length() < lineSize) {
+				if (line.length() >= lineSize - 2) {
+					line += " |";
+				} else {
+					line += " ";
+				}
+			}
+			box += line + "\n";
+			box += seperator + "\n";
+		}
+		return box;
 	}
 
 	/**
