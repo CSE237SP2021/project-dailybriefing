@@ -2,7 +2,7 @@
 
 ## Building and Running the App
 
-Included is a script file, build-and-run.sh. Github will sometimes make this file non executable when you download it, so you have to either make it an executable yourself or execute it with the command `bash ./build-and-run.sh`. This will compile and run the program.
+Included are two script files, build.sh and run.sh  Github will sometimes make these files non executable when you download it, so you have to either make it an executable yourself or execute it with the command `bash ./build.sh` and `bash ./run.sh`. Build compiles the program. It also checks to see if you've already built the program in the past and, if so, if you want to delete your old data. You can use this while testing to wipe the database if you want. Additionally, wiping data is recommended if you are updating to a newer version of the app from an old one to fix bugs. Run runs the program, and from there control is given over to the java program. We've split these scripts in our final iteration, so that we aren't making the user recompile every time they run the app, as well as giving them a convenient way to delete their data if they wish.
 
 ## Project Overview
 
