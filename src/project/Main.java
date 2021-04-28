@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import project.DataStorage.BriefingConfigLocation;
+import project.DayInHistory.HistoryEvent;
 import project.WeatherAPIInterface.ForecastContainer;
 
 public class Main {
@@ -84,6 +85,8 @@ public class Main {
 					String id = defaultLoc.get(0).woeid;
 					ForecastContainer currentForecast = WeatherAPIInterface.findForecasts(id);
 					ui.outputCurrentWeather(currentForecast);
+					ArrayList<HistoryEvent> events = DayInHistory.getTodaysHistoricalEvents();
+					ui.outputHistoryEvent(events);
 					break;
 				}
 			case GetWeatherForLocation:

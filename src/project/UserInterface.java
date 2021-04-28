@@ -1,8 +1,10 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
+import project.DayInHistory.HistoryEvent;
 import project.WeatherAPIInterface.Forecast;
 import project.WeatherAPIInterface.ForecastContainer;
 
@@ -37,6 +39,7 @@ public class UserInterface {
 	public void presentWelcome() {
 		System.out.println("");
 		System.out.println("================ Welcome to the DailyBriefing App! ================");
+		System.out.println("---------- Powered by MetaWeather.com and historynet.com ----------");
 		System.out.println("-------------------------------------------------------------------");
 		System.out.println("To navigate menus, please type the number of the option you want to select");
 		System.out.println("");
@@ -109,6 +112,69 @@ public class UserInterface {
 		}
 		return response;
 	}
+	
+	/**
+	 * Displays a random historyEvent from the list provided
+	 * @param events
+	 */
+	public void outputHistoryEvent(ArrayList<HistoryEvent> events) {
+		if (events.size() == 0) {
+			return;
+		}
+		// get a random event from the list
+		HistoryEvent ev = events.get(new Random().nextInt(events.size()));
+		ArrayList<String> boxEntries = new ArrayList<>();
+		String header = "Historical Fact of the Day";
+		String content = Integer.parseInt(ev.year) + " A.D. | " + ev.title;
+		boxEntries.add(header);
+		boxEntries.add(content);
+		String box = this.formatBox(boxEntries);
+		System.out.print(box);
+	}
+	
+	/**
+	 * Formats and prints a box around a list of items
+	 * The box will look like the following:
+	 * +----------------+
+	 * | Hello, World!  |
+	 * +----------------+
+	 * | Item Number 2! |
+	 * +----------------+
+	 * @param entries a list of lines in the box
+	 */
+	public String formatBox(ArrayList<String> entries) {
+		String box = "";
+		int lineSize = 0;
+		for (String e : entries) {
+			if (e.length() > lineSize) {
+				lineSize = e.length();
+			}
+		}
+		// Add four to the length so we can add "| " and " |" to the ends of each line
+		lineSize = lineSize + 4;
+		String seperator = "";
+		while (seperator.length() < lineSize) {
+			if (seperator.length() == 0 || seperator.length() == lineSize - 1) {
+				seperator += "+";
+			} else {
+				seperator += "-";
+			}
+		}
+		box += seperator + "\n";
+		for (String entry : entries) {
+			String line = "| " + entry;
+			while (line.length() < lineSize) {
+				if (line.length() >= lineSize - 2) {
+					line += " |";
+				} else {
+					line += " ";
+				}
+			}
+			box += line + "\n";
+			box += seperator + "\n";
+		}
+		return box;
+	}
 
 	/**
 	 * Prints the temperature information for the selected city for a certain number
@@ -118,15 +184,18 @@ public class UserInterface {
 	 * @param container - forecast container containing weather/city information
 	 */
 	public void outputForecast(ForecastContainer container) {
+		ArrayList<String> forecastWeatherInfo = new ArrayList<String>();
 		String datetime = container.time;
 		String date = datetime.substring(0, datetime.indexOf("T"));
-		System.out.println("Briefing for " + container.title + ":");
+		forecastWeatherInfo.add("Briefing for " + container.title + ":");
 		for (Forecast f : container.consolidated_weather) {
 			date = f.applicable_date;
-			System.out.println("\tDate: " + date);
-			System.out.println("\tTemp: " + formatTemp(f.the_temp));
-			System.out.println("\tWeather: "+f.weather_state_name);
+			forecastWeatherInfo.add("Date: " + date);
+			forecastWeatherInfo.add("Temp: " + formatTemp(f.the_temp));
+			forecastWeatherInfo.add("Weather: "+f.weather_state_name);
 		}
+		String weatherBox = this.formatBox(forecastWeatherInfo);
+		System.out.print(weatherBox);
 	}
 
 	/**
@@ -136,20 +205,23 @@ public class UserInterface {
 	 * @param container - forecast container containing weather/city information
 	 */
 	public void outputCurrentWeather(ForecastContainer container) {
+		ArrayList<String> currentWeatherInfo = new ArrayList<String>();
 		String datetime = container.time;
 		String date = datetime.substring(0, datetime.indexOf("T"));
 		boolean notFound = true;
 		// should be the first one, but check anyways to make sure date matches today
 		for (Forecast f : container.consolidated_weather) {
 			if (f.applicable_date.equals(date)) {
-				this.outputDateTime(container);
-				System.out.println("\tTemp: " + formatTemp(f.the_temp));
-				outputWeatherConditions(f);
-				System.out.println("\tClothing Suggestion: " + this.getClothingSuggestion(f.the_temp, f.weather_state_abbr));
+				currentWeatherInfo.addAll(this.outputDateTime(container));
+				currentWeatherInfo.add("Temp: " + formatTemp(f.the_temp));
+				currentWeatherInfo.addAll(outputWeatherConditions(f));
+				currentWeatherInfo.add("Clothing Suggestion: " + ClothingSuggestion.getClothingSuggestion(f.the_temp, f.weather_state_abbr));
 				notFound = false;
 				break;
 			}
 		}
+		String weatherBox = this.formatBox(currentWeatherInfo);
+		System.out.print(weatherBox);
 		if (notFound) {
 			System.out.println("\tCould not find weather for this date at this location");
 		}
@@ -162,15 +234,17 @@ public class UserInterface {
 	 * @author mark
 	 * @param container - the forecast container containing weather/city information
 	 */
-	private void outputDateTime(ForecastContainer container) {
+	private ArrayList<String> outputDateTime(ForecastContainer container) {
 		String datetime = container.time;
 
 		String date = datetime.substring(0, datetime.indexOf("T"));
 		String time = datetime.substring(datetime.indexOf("T") + 1, datetime.indexOf("."));
-
-		System.out.println("Briefing for " + container.title + ":");
-		System.out.println("\tDate: " + date);
-		System.out.println("\tTime: " + time);
+		
+		ArrayList<String> dateTimeInfo = new ArrayList<String>();
+		dateTimeInfo.add("Briefing for " + container.title + ":");
+		dateTimeInfo.add("Date: " + date);
+		dateTimeInfo.add("Time: " + time);
+		return dateTimeInfo;
 	}
 	
 	public String formatTemp(String temp) {
@@ -189,92 +263,19 @@ public class UserInterface {
 	}
 	
 	/**
-	 * Gets the clothing suggestion for daily weather forecast
-	 * 
-	 * @author mark
-	 * @param temp - the temperature for the days forecast
-	 * @param state - the weather state abbreviation
-	 * @return - the clothing suggestion
-	 */
-	public String getClothingSuggestion(String temp, String state) {
-		
-		if(!state.equals("hc") && !state.equals("lc") && !state.equals("c")) {
-			return getStateSuggestion(state);
-		}
-		
-		return getTempSuggestion(temp);
-	}
-	
-	/**
-	 * Gets the clothing suggestion for daily weather forecast based on temp
-	 * 
-	 * @author mark
-	 * @param temp - the temperature for the days forecast
-	 * @return - the clothing suggestion
-	 */
-	public String getTempSuggestion(String temp) {
-		if(temp == null || temp.equals("")) {
-			return "cannot get clothing suggestion";
-		}
-		
-		double tempNum =  Double.parseDouble(temp);
-		
-		if (tempNum >= 25) {
-			return "It's hot! Try wearing shorts and T-shirt.";
-		} else if (tempNum < 25 && tempNum >= 20) {
-			return "It's warm. Try wearing a T-shirt with shorts or pants.";
-		} else if (tempNum < 20 && tempNum >= 15) {
-			return "Try wearing pants and a lightweight jacket.";
-		} else if (tempNum < 15 && tempNum >= 10) {
-			return "It's cool.  Wear pants and a jacket.";
-		} else if (tempNum < 10 && tempNum >= 0) {
-			return "It's cold.  You should wear warm jacket.";
-		} else {
-			return "It's freezing!.  Make sure to wear a winter jacket.";
-		}
-	}
-	
-	/**
-	 * Gets the clothing suggestion for daily weather forecast
-	 * 
-	 * @author mark
-	 * @param state - the weather state abbv
-	 * @return - the clothing suggestion
-	 */
-	public String getStateSuggestion(String state) {
-		if(state == null) {
-			return "unable to get suggestion";
-		}
-		
-		String[] rainSuggests  = {"Bring an umbrella!", "Wear a raincoat!"};
-		String[] snowSuggests = {"Wear a hat and gloves!", "Wear winter boots!"};
-		
-		switch(state) {
-		case "t":
-		case "hr":
-		case "lr":
-		case "s":
-			return rainSuggests[(int)(Math.random()*(rainSuggests.length))];
-		case "sn":
-		case "sl":
-		case "h":
-			return snowSuggests[(int)(Math.random()*(snowSuggests.length))];
-		default:
-			return "unable to get suggestion";
-		}
-	}
-	/**
 	 *Displays weather condition information such as wind, humdiity, air pressure, visibility, and weather
 	 *@author Clay
 	 *@param currentForecast- the forecast object for current date
 	 *
 	 */
-	public void outputWeatherConditions(Forecast currentForecast) {
-		System.out.println("\tWeather: "+currentForecast.weather_state_name);
-		System.out.println("\tWind: "+ currentForecast.wind_speed.substring(0,5) + " mph " + currentForecast.wind_direction_compass);
-		System.out.println("\tHumidity: "+ currentForecast.humidity+"%");
-		System.out.println("\tAir Pressure: "+currentForecast.air_pressure +" mbar");
-		System.out.println("\tVisibility: "+currentForecast.visibility.substring(0,5) +" miles");
+	public ArrayList<String> outputWeatherConditions(Forecast currentForecast) {
+		ArrayList<String> weatherConditionInfo = new ArrayList<String>();
+		weatherConditionInfo.add("Weather: "+currentForecast.weather_state_name);
+		weatherConditionInfo.add("Wind: "+ currentForecast.wind_speed.substring(0,5) + " mph " + currentForecast.wind_direction_compass);
+		weatherConditionInfo.add("Humidity: "+ currentForecast.humidity+"%");
+		weatherConditionInfo.add("Air Pressure: "+currentForecast.air_pressure +" mbar");
+		weatherConditionInfo.add("Visibility: "+currentForecast.visibility.substring(0,5) +" miles");
+		return weatherConditionInfo;
 	}
 
 }
