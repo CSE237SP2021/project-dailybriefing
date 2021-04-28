@@ -184,15 +184,18 @@ public class UserInterface {
 	 * @param container - forecast container containing weather/city information
 	 */
 	public void outputForecast(ForecastContainer container) {
+		ArrayList<String> currentForecastInfo = new ArrayList<String>();
 		String datetime = container.time;
 		String date = datetime.substring(0, datetime.indexOf("T"));
-		System.out.println("Briefing for " + container.title + ":");
+		currentForecastInfo.add("Briefing for " + container.title + ":");
 		for (Forecast f : container.consolidated_weather) {
 			date = f.applicable_date;
-			System.out.println("\tDate: " + date);
-			System.out.println("\tTemp: " + formatTemp(f.the_temp));
-			System.out.println("\tWeather: "+f.weather_state_name);
+			currentForecastInfo.add("Date: " + date);
+			currentForecastInfo.add("Temp: " + formatTemp(f.the_temp));
+			currentForecastInfo.add("Weather: "+f.weather_state_name);
 		}
+		String forecastBox = this.formatBox(currentForecastInfo);
+		System.out.print(forecastBox);
 	}
 
 	/**
