@@ -184,15 +184,18 @@ public class UserInterface {
 	 * @param container - forecast container containing weather/city information
 	 */
 	public void outputForecast(ForecastContainer container) {
+		ArrayList<String> forecastWeatherInfo = new ArrayList<String>();
 		String datetime = container.time;
 		String date = datetime.substring(0, datetime.indexOf("T"));
-		System.out.println("Briefing for " + container.title + ":");
+		forecastWeatherInfo.add("Briefing for " + container.title + ":");
 		for (Forecast f : container.consolidated_weather) {
 			date = f.applicable_date;
-			System.out.println("\tDate: " + date);
-			System.out.println("\tTemp: " + formatTemp(f.the_temp));
-			System.out.println("\tWeather: "+f.weather_state_name);
+			forecastWeatherInfo.add("Date: " + date);
+			forecastWeatherInfo.add("Temp: " + formatTemp(f.the_temp));
+			forecastWeatherInfo.add("Weather: "+f.weather_state_name);
 		}
+		String weatherBox = this.formatBox(forecastWeatherInfo);
+		System.out.print(weatherBox);
 	}
 
 	/**
@@ -202,20 +205,23 @@ public class UserInterface {
 	 * @param container - forecast container containing weather/city information
 	 */
 	public void outputCurrentWeather(ForecastContainer container) {
+		ArrayList<String> currentWeatherInfo = new ArrayList<String>();
 		String datetime = container.time;
 		String date = datetime.substring(0, datetime.indexOf("T"));
 		boolean notFound = true;
 		// should be the first one, but check anyways to make sure date matches today
 		for (Forecast f : container.consolidated_weather) {
 			if (f.applicable_date.equals(date)) {
-				this.outputDateTime(container);
-				System.out.println("\tTemp: " + formatTemp(f.the_temp));
-				outputWeatherConditions(f);
-				System.out.println("\tClothing Suggestion: " + ClothingSuggestion.getClothingSuggestion(f.the_temp, f.weather_state_abbr));
+				currentWeatherInfo.addAll(this.outputDateTime(container));
+				currentWeatherInfo.add("Temp: " + formatTemp(f.the_temp));
+				currentWeatherInfo.addAll(outputWeatherConditions(f));
+				currentWeatherInfo.add("Clothing Suggestion: " + ClothingSuggestion.getClothingSuggestion(f.the_temp, f.weather_state_abbr));
 				notFound = false;
 				break;
 			}
 		}
+		String weatherBox = this.formatBox(currentWeatherInfo);
+		System.out.print(weatherBox);
 		if (notFound) {
 			System.out.println("\tCould not find weather for this date at this location");
 		}
@@ -228,15 +234,17 @@ public class UserInterface {
 	 * @author mark
 	 * @param container - the forecast container containing weather/city information
 	 */
-	private void outputDateTime(ForecastContainer container) {
+	private ArrayList<String> outputDateTime(ForecastContainer container) {
 		String datetime = container.time;
 
 		String date = datetime.substring(0, datetime.indexOf("T"));
 		String time = datetime.substring(datetime.indexOf("T") + 1, datetime.indexOf("."));
-
-		System.out.println("Briefing for " + container.title + ":");
-		System.out.println("\tDate: " + date);
-		System.out.println("\tTime: " + time);
+		
+		ArrayList<String> dateTimeInfo = new ArrayList<String>();
+		dateTimeInfo.add("Briefing for " + container.title + ":");
+		dateTimeInfo.add("Date: " + date);
+		dateTimeInfo.add("Time: " + time);
+		return dateTimeInfo;
 	}
 	
 	public String formatTemp(String temp) {
@@ -260,12 +268,14 @@ public class UserInterface {
 	 *@param currentForecast- the forecast object for current date
 	 *
 	 */
-	public void outputWeatherConditions(Forecast currentForecast) {
-		System.out.println("\tWeather: "+currentForecast.weather_state_name);
-		System.out.println("\tWind: "+ currentForecast.wind_speed.substring(0,5) + " mph " + currentForecast.wind_direction_compass);
-		System.out.println("\tHumidity: "+ currentForecast.humidity+"%");
-		System.out.println("\tAir Pressure: "+currentForecast.air_pressure +" mbar");
-		System.out.println("\tVisibility: "+currentForecast.visibility.substring(0,5) +" miles");
+	public ArrayList<String> outputWeatherConditions(Forecast currentForecast) {
+		ArrayList<String> weatherConditionInfo = new ArrayList<String>();
+		weatherConditionInfo.add("Weather: "+currentForecast.weather_state_name);
+		weatherConditionInfo.add("Wind: "+ currentForecast.wind_speed.substring(0,5) + " mph " + currentForecast.wind_direction_compass);
+		weatherConditionInfo.add("Humidity: "+ currentForecast.humidity+"%");
+		weatherConditionInfo.add("Air Pressure: "+currentForecast.air_pressure +" mbar");
+		weatherConditionInfo.add("Visibility: "+currentForecast.visibility.substring(0,5) +" miles");
+		return weatherConditionInfo;
 	}
 
 }
