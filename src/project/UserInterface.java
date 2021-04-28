@@ -184,18 +184,18 @@ public class UserInterface {
 	 * @param container - forecast container containing weather/city information
 	 */
 	public void outputForecast(ForecastContainer container) {
-		ArrayList<String> currentForecastInfo = new ArrayList<String>();
+		ArrayList<String> forecastWeatherInfo = new ArrayList<String>();
 		String datetime = container.time;
 		String date = datetime.substring(0, datetime.indexOf("T"));
-		currentForecastInfo.add("Briefing for " + container.title + ":");
+		forecastWeatherInfo.add("Briefing for " + container.title + ":");
 		for (Forecast f : container.consolidated_weather) {
 			date = f.applicable_date;
-			currentForecastInfo.add("Date: " + date);
-			currentForecastInfo.add("Temp: " + formatTemp(f.the_temp));
-			currentForecastInfo.add("Weather: "+f.weather_state_name);
+			forecastWeatherInfo.add("Date: " + date);
+			forecastWeatherInfo.add("Temp: " + formatTemp(f.the_temp));
+			forecastWeatherInfo.add("Weather: "+f.weather_state_name);
 		}
-		String forecastBox = this.formatBox(currentForecastInfo);
-		System.out.print(forecastBox);
+		String weatherBox = this.formatBox(forecastWeatherInfo);
+		System.out.print(weatherBox);
 	}
 
 	/**
@@ -217,11 +217,11 @@ public class UserInterface {
 				currentWeatherInfo.addAll(outputWeatherConditions(f));
 				currentWeatherInfo.add("Clothing Suggestion: " + this.getClothingSuggestion(f.the_temp, f.weather_state_abbr));
 				notFound = false;
-				String weatherBox = this.formatBox(currentWeatherInfo);
-				System.out.print(weatherBox);
 				break;
 			}
 		}
+		String weatherBox = this.formatBox(currentWeatherInfo);
+		System.out.print(weatherBox);
 		if (notFound) {
 			System.out.println("\tCould not find weather for this date at this location");
 		}
